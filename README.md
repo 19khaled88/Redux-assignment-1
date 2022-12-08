@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Advance Redux Assignment - 1
 
 1. React
 2. React-redux
