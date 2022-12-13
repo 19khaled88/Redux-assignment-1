@@ -1,13 +1,26 @@
 import { actionTypes } from '../actions/postActionsTypes'
-const { POST_CREATE, POST_DELETE } = actionTypes
+const {
+  POST_CREATE,
+  POST_DELETE,
+  POST_GET,
+  POST_EDIT,
+  POST_SORT,
+  POST_HISTORY,
+} = actionTypes
 const initialState = {
   posts: [],
+  history: [],
   pending: 'false',
   failure: 'false',
 }
 
 const postReducer = (state = initialState, action) => {
   switch (action.type) {
+    case POST_GET:
+      return {
+        ...state,
+        posts: action.payload,
+      }
     case POST_CREATE:
       return {
         ...state,
@@ -16,16 +29,34 @@ const postReducer = (state = initialState, action) => {
         failure: false,
       }
     case POST_DELETE:
-      if (state.posts.length > 0) {
+      const res = state.posts.filter((e) => e._id !== action.payload)
+      if (res) {
         return {
-          posts: state.posts.slice(0, state.posts.length - 1),
-        }
-      } else {
-        return {
-          posts: state.posts,
+          ...state,
+          posts: res,
         }
       }
-
+      return {
+        ...state,
+        posts: state.posts,
+      }
+    case POST_EDIT:
+      let response = state.posts.filter((e) => e._id !== action.payload._id)
+      response.push(action.payload)
+      return {
+        ...state,
+        posts: response,
+      }
+    case POST_SORT:
+      return {
+        ...state,
+        posts: action.payload,
+      }
+    case POST_HISTORY:
+      return {
+        ...state,
+        history: [...state.history, action.payload],
+      }
     default:
       return state
   }
